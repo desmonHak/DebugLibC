@@ -60,6 +60,8 @@ typedef enum
     DEBUG_LEVEL_WARNING,
     DEBUG_LEVEL_ERROR
 } DebugLevel;
+static DebugLevel currentLevel = DEBUG_LEVEL_INFO; // nivel de debbug del programa por default
+
 const char* ErrorLevelStrings[] = {
     "INFO",
     "WARNING",
@@ -112,8 +114,15 @@ void debug_print(DebugLevel level, const char *fmt, ...);
 void __attribute__((constructor)) __constructor_debug_c__();
 void __attribute__((destructor)) __destructor_debug_c__();
 
+
+#ifdef _WIN32
+#ifndef _ExceptionHandler_WIN_
+#define _ExceptionHandler_WIN_
+LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS *ExceptionInfo);
+#endif
+#endif
 //static FILE *logFile = NULL;
-static DebugLevel currentLevel = DEBUG_LEVEL_INFO;
+
 
 #include "debug_c.c"
 #endif 

@@ -34,9 +34,7 @@
 #define __DEBUG_C__
 #include "debug_c.h"
 
-#ifdef _WIN32
-#ifndef _ExceptionHandler_WIN_
-#define _ExceptionHandler_WIN_
+#ifdef _ExceptionHandler_WIN_
 LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS *ExceptionInfo) {
     printf("Se ha producido una excepcion (codigo %lx) en la direccion %p\n",
         ExceptionInfo->ExceptionRecord->ExceptionCode,
@@ -44,15 +42,12 @@ LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS *ExceptionInfo) {
     return EXCEPTION_EXECUTE_HANDLER; // Manejar la excepcion
 }
 #endif
-#endif
 
 void __attribute__((constructor)) __constructor_debug_c__(){
     //debug_set_log_file("debug_log.txt");
     //open_file(&Log_debug_file, NAME_DEFAULT_LOG_DEBUG, READ_WRITE );
-    #ifdef _WIN32
-    #ifndef _ExceptionHandler_WIN_
+    #ifdef _ExceptionHandler_WIN_
     SetUnhandledExceptionFilter(ExceptionHandler);
-    #endif
     #endif
     DEBUG_PRINT(DEBUG_LEVEL_INFO, "#{FG:white}[#{FG:red}DEBUG INIT#{FG:white}]\n");
     

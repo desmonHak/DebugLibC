@@ -5,6 +5,7 @@
 #include <string.h>
 #include <time.h>
 
+#define _ExceptionHandler_WIN_
 #define DEBUG_ENABLE 
 #include "time_code.h"
 

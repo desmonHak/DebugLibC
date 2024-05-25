@@ -1,3 +1,34 @@
+/*
+ *	Licencia Apache, Version 2.0 con Modificacion
+ *	
+ *	Copyright 2023 Desmon (David)
+ *	
+ *	Se concede permiso, de forma gratuita, a cualquier persona que obtenga una copia de 
+ *	este software y archivos de documentacion asociados (el "Software"), para tratar el 
+ *	Software sin restricciones, incluidos, entre otros, los derechos de uso, copia, 
+ *	modificacion, fusion, publicacion, distribucion, sublicencia y/o venta de copias del 
+ *	Software, y para permitir a las personas a quienes se les proporcione el Software 
+ *	hacer lo mismo, sujeto a las siguientes condiciones:
+ *	
+ *	El anterior aviso de copyright y este aviso de permiso se incluiran en todas las 
+ *	copias o partes sustanciales del Software.
+ *	
+ *	EL SOFTWARE SE PROPORCIONA "TAL CUAL", SIN GARANTiA DE NINGÚN TIPO, EXPRESA O 
+ *	IMPLiCITA, INCLUYENDO PERO NO LIMITADO A LAS GARANTiAS DE COMERCIABILIDAD, IDONEIDAD 
+ *	PARA UN PROPoSITO PARTICULAR Y NO INFRACCIoN. EN NINGÚN CASO LOS TITULARES DEL 
+ *	COPYRIGHT O LOS TITULARES DE LOS DERECHOS DE AUTOR SERaN RESPONSABLES DE NINGÚN 
+ *	RECLAMO, DAnO U OTRA RESPONSABILIDAD, YA SEA EN UNA ACCIoN DE CONTRATO, AGRAVIO O DE 
+ *	OTRA MANERA, QUE SURJA DE, FUERA DE O EN CONEXIoN CON EL SOFTWARE O EL USO U OTRO TIPO
+ *	DE ACCIONES EN EL SOFTWARE.
+ *	
+ *	Ademas, cualquier modificacion realizada por terceros se considerara propiedad del 
+ *	titular original de los derechos de autor. Los titulares de derechos de autor 
+ *	originales no se responsabilizan de las modificaciones realizadas por terceros.
+ *	
+ *	Queda explicitamente establecido que no es obligatorio especificar ni notificar los 
+ *	cambios realizados entre versiones, ni revelar porciones especificas de codigo 
+ *	modificado.
+ */
 #ifndef __COLORS_H__
 #define __COLORS_H__ "Desmon.hak.anon"
 #define __version 2.0
@@ -8,6 +39,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include <inttypes.h>
 typedef enum ANSIColors
 {
     ANSI_BLACK = 0,
@@ -19,6 +51,9 @@ typedef enum ANSIColors
     ANSI_CYAN = 6,
     ANSI_WHITE = 7,
 } ANSIColors;
+
+// macros que se definen para cada version windows:
+// https://learn.microsoft.com/es-es/windows/win32/winprog/using-the-windows-headers?redirectedfrom=MSDN#setting_winver_or__win32_winnt
 
 #define REGULAR_COLORS_LETTER 30
 #define HIGH_INTENSTY  90
@@ -33,7 +68,7 @@ void ANSI_back_color(ANSIColors color);
 
 typedef union sizes_num {
     unsigned long long i64;
-    unsigned long i32;
+    unsigned int i32;
     unsigned short int i16;
     unsigned char i8;
 } sizes_num;
@@ -280,6 +315,7 @@ typedef enum ConsoleColor
 #define POINTGREEN(data) "#{FG:green}[#{FG:blue}*#{FG:green}]#{FG:white}" data "#{FG:reset}"
 #define POINTRED(data)   "#{FG:yellow}[#{FG:blue}*#{FG:yellow}]#{FG:purple}" data "#{FG:reset}"
 
+#ifndef __DISABLE_COLORS_FORE_BACK_GROUND__ 
 // definir el color de fondo de forma personalizada
 #define BACKGROUND_COLOR_CUSTOM(color) "\033[48;5;"color"m"
 
@@ -288,6 +324,13 @@ typedef enum ConsoleColor
 
 // definir el color de letra de forma personalizada
 #define FOREGROUND_COLOR_CUSTOM(color) "\033[38;5;"color"m"
+
+#else  // no comptible para win7
+#warning BACKGROUND_COLOR_CUSTOM, BACKGROUND_COLOR_CUSTOM_RGB y FOREGROUND_COLOR_CUSTOM no son compatibles en Windows 7
+#define BACKGROUND_COLOR_CUSTOM(color) color 
+#define BACKGROUND_COLOR_CUSTOM_RGB(red, green, blue) red green blue
+#define FOREGROUND_COLOR_CUSTOM(color) color
+#endif
 
 #define FOREGROUND_COLOR_CUSTOM_RGB(red, green, blue) "\033[48;2;"red";"green";"blue"m"
 
@@ -323,7 +366,7 @@ void __attribute__((destructor)) _RESET_COLOR__();
 
 void clear_line();
 void clear_display();
-void set_title(char *title);
+void set_title(const char *title);
 #ifdef _WIN32
 void setConsoleForegroundColor(WORD foregroundColor);
 void setConsoleBackgroundColor(WORD backgroundColor);
@@ -334,19 +377,31 @@ void setConsoleBackgroundColor(ConsoleColor backgroundColor);
 void setConsoleColor(ConsoleColor foreground, ConsoleColor background);
 #endif
 void resetColorTerminal();
-void pos(unsigned char x, unsigned char y, char *data);
-void back(char *data, unsigned char number);
-void forward(char *data, unsigned char number);
-void down(char *data, unsigned char number);
-void up(char *data, unsigned char number);
+void pos(const unsigned char x, const unsigned char y, const char *data);
+void back(const char *data, const unsigned char number);
+void forward(const char *data, const unsigned char number);
+void down(const char *data, const unsigned char number);
+void up(const char *data, const unsigned char number);
 static inline void foreground_color_custom_RGB(RGB_C color);
-static void foreground_color_custom_(unsigned char red, unsigned char green, unsigned char blue);
+static void foreground_color_custom_(const unsigned char red, const unsigned char green, const unsigned char blue);
 static inline void background_color_custom_RGB(RGB_C color);
-static void background_color_custom_(unsigned char red, unsigned char green, unsigned char blue);
+static void background_color_custom_(const unsigned char red, const unsigned char green, const unsigned char blue);
 static inline void back_fore_color_custom_RGB(RGB_C colorBackGround, RGB_C colorForeGround);
 static void back_fore_color_custom_(unsigned char redB, unsigned char greenB,
                                        unsigned char blueB, unsigned char redF,
                                        unsigned char greenF, unsigned char blueF);
+unsigned int jenkins_hash(
+    unsigned int value,
+    unsigned int n1, unsigned int n2, unsigned int n3,
+    unsigned int n4, unsigned int n5, unsigned int n6);
+void shuffle_array(int array[], int size);
+void generate_three_values(
+    unsigned int x,
+    unsigned int *value1,
+    unsigned int *value2,
+    unsigned int *value3,
+    unsigned int n1, unsigned int n2, unsigned int n3,
+    unsigned int n4, unsigned int n5, unsigned int n6);
 void printf_color(const char *format, ...);
 void vprintf_color(const char *format, va_list args);
 void print_sizes_num(sizes_num byte, size_t size_word);

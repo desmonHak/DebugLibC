@@ -1,3 +1,34 @@
+/*
+ *	Licencia Apache, Version 2.0 con Modificacion
+ *	
+ *	Copyright 2023 Desmon (David)
+ *	
+ *	Se concede permiso, de forma gratuita, a cualquier persona que obtenga una copia de 
+ *	este software y archivos de documentacion asociados (el "Software"), para tratar el 
+ *	Software sin restricciones, incluidos, entre otros, los derechos de uso, copia, 
+ *	modificacion, fusion, publicacion, distribucion, sublicencia y/o venta de copias del 
+ *	Software, y para permitir a las personas a quienes se les proporcione el Software 
+ *	hacer lo mismo, sujeto a las siguientes condiciones:
+ *	
+ *	El anterior aviso de copyright y este aviso de permiso se incluiran en todas las 
+ *	copias o partes sustanciales del Software.
+ *	
+ *	EL SOFTWARE SE PROPORCIONA "TAL CUAL", SIN GARANTiA DE NINGÚN TIPO, EXPRESA O 
+ *	IMPLiCITA, INCLUYENDO PERO NO LIMITADO A LAS GARANTiAS DE COMERCIABILIDAD, IDONEIDAD 
+ *	PARA UN PROPoSITO PARTICULAR Y NO INFRACCIoN. EN NINGÚN CASO LOS TITULARES DEL 
+ *	COPYRIGHT O LOS TITULARES DE LOS DERECHOS DE AUTOR SERaN RESPONSABLES DE NINGÚN 
+ *	RECLAMO, DAnO U OTRA RESPONSABILIDAD, YA SEA EN UNA ACCIoN DE CONTRATO, AGRAVIO O DE 
+ *	OTRA MANERA, QUE SURJA DE, FUERA DE O EN CONEXIoN CON EL SOFTWARE O EL USO U OTRO TIPO
+ *	DE ACCIONES EN EL SOFTWARE.
+ *	
+ *	Ademas, cualquier modificacion realizada por terceros se considerara propiedad del 
+ *	titular original de los derechos de autor. Los titulares de derechos de autor 
+ *	originales no se responsabilizan de las modificaciones realizadas por terceros.
+ *	
+ *	Queda explicitamente establecido que no es obligatorio especificar ni notificar los 
+ *	cambios realizados entre versiones, ni revelar porciones especificas de codigo 
+ *	modificado.
+ */
 #ifndef __COLORS_C__
 #define __COLORS_C__ "Desmon.hak.anon"
 #include "colors.h"
@@ -38,7 +69,8 @@ void generate_three_values(
     unsigned int n1, unsigned int n2, unsigned int n3,
     unsigned int n4, unsigned int n5, unsigned int n6)
 {
-    if (x < 0 || x > 255)
+    // si es 0 o menor o igual que 255
+    if ((x == 0) || (x >= 255))
     {
         printf("El numero debe estar en el rango de 0 a 255.\n");
         return;
@@ -183,6 +215,7 @@ void setConsoleColor(ConsoleColor foreground, ConsoleColor background)
 #endif
 void printf_color(const char *format, ...)
 {
+    
     va_list args;
     va_start(args, format);
     vprintf_color(format, args);
@@ -195,7 +228,7 @@ void vprintf_color(const char *format, va_list args)
     va_copy(args_copy, args);
     size_t size = (vsnprintf(NULL, 0, format, args_copy) + 1) * sizeof(char);
     va_end(args_copy);
-    unsigned char *formatted_buffer = (unsigned char *)malloc(size);
+    char *formatted_buffer = (char *)malloc(size);
     vsprintf(formatted_buffer, format, args);
 
     const char *p = formatted_buffer;
@@ -210,7 +243,7 @@ void vprintf_color(const char *format, va_list args)
             if (*p == '}')
             {
                 color_code[color_code_index] = '\0';
-
+                
                 // Token de color encontrado, procesarlo aquí
                 if (strncmp(color_code, "FG:red", 6) == 0)
                 {
@@ -221,6 +254,7 @@ void vprintf_color(const char *format, va_list args)
                 {
                     // Restablecer color de primer plano
                     resetConsoleForegroundColor();
+                    
                 }
                 else if (strncmp(color_code, "BG:reset", 8) == 0)
                 {
@@ -343,7 +377,7 @@ void vprintf_color(const char *format, va_list args)
                     if (sscanf(color_code, "FG:%hhu;%hhu;%hhu", &red, &green, &blue) == 3)
                     {
                         // Cambiar a color personalizado
-                        foreground_color_custom(red, green, blue);
+                        foreground_color_custom_(red, green, blue);
                     }
                 }
                 else if (strncmp(color_code, "BG:", 3) == 0)
@@ -353,14 +387,14 @@ void vprintf_color(const char *format, va_list args)
                     if (sscanf(color_code, "BG:%hhu;%hhu;%hhu", &red, &green, &blue) == 3)
                     {
                         // Cambiar a color personalizado
-                        background_color_custom(red, green, blue);
+                        background_color_custom_(red, green, blue);
                     }
                 }
                 else if (strncmp(color_code, "i64:", 4) == 0)
                 {
                     sizes_num num;
 
-                    if (sscanf(color_code, "i64:%llu", &num.i64))
+                    if (sscanf(color_code, "i64:%"PRIu64, &num.i64))
                     {
                         print_sizes_num(num, 64);
                     }
@@ -368,7 +402,7 @@ void vprintf_color(const char *format, va_list args)
                 else if (strncmp(color_code, "i32:", 4) == 0)
                 {
                     sizes_num num;
-                    if (sscanf(color_code, "i32:%u", &num.i32))
+                    if (sscanf(color_code, "i32:%"SCNu32, &num.i32))
                     {
                         print_sizes_num(num, 32);
                     }
@@ -454,35 +488,37 @@ void clear_display()
 {
     printf(CLEAR_DISPLAY);
 }
-void set_title(char *title)
+void set_title(const char *title)
 {
-    printf(SET_TITLE("%d"), title);
+    printf(SET_TITLE("%s"), title);
 }
-void pos(unsigned char x, unsigned char y, char *data)
+void pos(const unsigned char x, const unsigned char y, const char *data)
 {
-    printf(POS("%d", "%d", "%s"), x, y, data);
+    printf(POS("%s", "%d", "%d"), x, y, data);
 }
-void back(char *data, unsigned char number)
+void back(const char *data, const unsigned char number)
 {
-    printf(BACK("%s", "%d"), data, number);
+    printf(BACK("%s", "%d"), number, data);
 }
-void forward(char *data, unsigned char number)
+void forward(const char *data, const unsigned char number)
 {
-    printf(FORWARD("%s", "%d"), data, number);
+    printf(FORWARD("%s", "%d"), number, data);
 }
-void down(char *data, unsigned char number)
+void down(const char *data, const unsigned char number)
 {
-    printf(DOWN("%s", "%d"), data, number);
+    printf(DOWN("%s", "%d"), number, data);
 }
-void up(char *data, unsigned char number)
+void up(const char *data, const unsigned char number)
 {
-    printf(UP("%s", "%d"), data, number);
+    printf(UP("%s", "%d"), number, data);
 }
+
+#ifndef __DISABLE_COLORS_FORE_BACK_GROUND__ 
 static inline void foreground_color_custom_RGB(RGB_C color)
 {
     foreground_color_custom_(color.r, color.g, color.b);
 }
-static void foreground_color_custom_(unsigned char red, unsigned char green, unsigned char blue)
+static void foreground_color_custom_(const unsigned char red, const unsigned char green, const unsigned char blue)
 {
     printf(FOREGROUND_COLOR_CUSTOM_RGB("%d", "%d", "%d"), red, green, blue);
 }
@@ -490,10 +526,28 @@ static inline void background_color_custom_RGB(RGB_C color)
 {
     background_color_custom_(color.red, color.green, color.blue);
 }
-static void background_color_custom_(unsigned char red, unsigned char green, unsigned char blue)
+static void background_color_custom_(const unsigned char red, const unsigned char green, const unsigned char blue)
 {
     printf(BACKGROUND_COLOR_CUSTOM_RGB("%d", "%d", "%d"), red, green, blue);
 }
+#else
+static inline void background_color_custom_RGB(RGB_C color)
+{
+    return; // no comptible para win7
+}
+static void background_color_custom_(const unsigned char red, const unsigned char green, const unsigned char blue)
+{
+    return; // no comptible para win7
+}
+static inline void foreground_color_custom_RGB(RGB_C color)
+{
+    return; // no comptible para win7
+}
+static void foreground_color_custom_(const unsigned char red, const unsigned char green, const unsigned char blue)
+{
+    return; // no comptible para win7
+}
+#endif
 static inline void back_fore_color_custom_RGB(RGB_C colorBackGround, RGB_C colorForeGround)
 {
     back_fore_color_custom_(
@@ -508,8 +562,8 @@ static void back_fore_color_custom_(unsigned char redB, unsigned char greenB,
                                     unsigned char blueB, unsigned char redF,
                                     unsigned char greenF, unsigned char blueF)
 {
-    foreground_color_custom(redF, greenF, blueF);
-    background_color_custom(redB, greenB, blueB);
+    foreground_color_custom_(redF, greenF, blueF);
+    background_color_custom_(redB, greenB, blueB);
 }
 
 void ANSI_fore_color(ANSIColors color)

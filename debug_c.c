@@ -34,7 +34,14 @@
 #define __DEBUG_C__
 #include "debug_c.h"
 
+// antiguas versiones de esta libreria usaba la macro _ExceptionHandler_WIN_ para activar las excepciones
+// se añadio la siguiente linea para que sea retrocompatible con versiones anteriores
 #ifdef _ExceptionHandler_WIN_
+#define _ExceptionHandler
+#endif
+
+#ifdef _ExceptionHandler
+#if defined(_WIN64) ||  defined(_WIN32)
 static const char* ExceptionCodeDescription( const unsigned int code )
 {
     #define STRING_EXCEPTION_WINDOWS(error_define) (const char*)#error_define
@@ -257,13 +264,70 @@ LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS *ExceptionInfo) {
 
     return EXCEPTION_EXECUTE_HANDLER; // Manejar la excepcion
 }
+#else // linux
+#define _GNU_SOURCE
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <signal.h>
+#include <ucontext.h>
+#include <execinfo.h>
+#include <unistd.h>
+#include <inttypes.h>
+
+void signalHandler(int sig, siginfo_t *info, void *context) {
+    ucontext_t *uc = (ucontext_t *)context;
+
+    printf("Señal capturada: %d (%s)\n", sig, strsignal(sig));
+    printf("Dirección de la falla: %p\n", info->si_addr);
+
+    // Mostrar backtrace
+    void *buffer[10];
+    int frames = backtrace(buffer, 10);
+    printf("Backtrace:\n");
+    backtrace_symbols_fd(buffer, frames, STDOUT_FILENO);
+
+#if defined(__x86_64__)
+    #define REG_RIP 16
+    #define REG_RSP 7
+    #define REG_RBP 6
+    #define REG_RAX 10
+    #define REG_RBX 11
+    #define REG_RCX 8
+    #define REG_RDX 9
+
+    printf("\nRegistros (x86_64):\n");
+    printf("RIP: %llx\n", (long long unsigned int)uc->uc_mcontext.gregs[REG_RIP]);
+    printf("RSP: %llx\n", (long long unsigned int)uc->uc_mcontext.gregs[REG_RSP]);
+    printf("RBP: %llx\n", (long long unsigned int)uc->uc_mcontext.gregs[REG_RBP]);
+    printf("RAX: %llx\n", (long long unsigned int)uc->uc_mcontext.gregs[REG_RAX]);
+    printf("RBX: %llx\n", (long long unsigned int)uc->uc_mcontext.gregs[REG_RBX]);
+    printf("RCX: %llx\n", (long long unsigned int)uc->uc_mcontext.gregs[REG_RCX]);
+    printf("RDX: %llx\n", (long long unsigned int)uc->uc_mcontext.gregs[REG_RDX]);
+#endif
+
+    exit(EXIT_FAILURE);
+}
+#endif
 #endif
 
 void __attribute__((constructor)) __constructor_debug_c__(){
     //debug_set_log_file("debug_log.txt");
     //open_file(&Log_debug_file, NAME_DEFAULT_LOG_DEBUG, READ_WRITE );
-    #ifdef _ExceptionHandler_WIN_
-    SetUnhandledExceptionFilter(ExceptionHandler);
+    #if defined(_ExceptionHandler)
+        #if (defined(_WIN64) ||  defined(_WIN32))
+        SetUnhandledExceptionFilter(ExceptionHandler);
+        #else
+        struct sigaction sa;
+        sa.sa_sigaction = signalHandler;
+        sa.sa_flags = SA_SIGINFO;
+
+        // Capturar señales
+        sigaction(SIGSEGV, &sa, NULL); // Segmentation fault
+        sigaction(SIGFPE, &sa, NULL);  // Floating point exception
+        sigaction(SIGILL, &sa, NULL);  // Illegal instruction
+        sigaction(SIGBUS, &sa, NULL);  // Bus error
+        #endif
     #endif
     DEBUG_PRINT(DEBUG_LEVEL_INFO, "#{FG:white}[#{FG:red}DEBUG INIT#{FG:white}]\n");
     
@@ -362,4 +426,6 @@ void debug_print(DebugLevel level, const char *fmt, ...)
         ERROR_C(ERROR_LEVEL_ERROR, message);
     }
 }
+
+
 #endif

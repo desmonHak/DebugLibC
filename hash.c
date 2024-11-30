@@ -5,7 +5,7 @@
 #include <string.h>
 #include <time.h>
 
-#define _ExceptionHandler_WIN_
+#define _ExceptionHandler
 #define DEBUG_ENABLE 
 #include "time_code.h"
 
@@ -252,6 +252,13 @@ int main() {
     // Print size and capacity
     printf("Size: %zu\n", hashTable->size);
     printf("Capacity: %zu\n", hashTable->capacity);
+
+    /*
+    int *a = 1;
+    *a = 1;
+    */
+
+    //print_table_hex(" ", hashTable, 500);
 
     // Free memory
     freeHashTable(hashTable);

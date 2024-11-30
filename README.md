@@ -4,7 +4,11 @@
 
 ## Libreria debug_c.h
 
-Una pequeña lib para el debug y mostrar informacion.
+Una pequeña lib para el debug y mostrar informacion. Usted puede compilar el archivo `hash.c` como muestra usando lo siguiente:
+```bash
+gcc -DDEBUG_ENABLE hash.c -o hash.elf
+```
+Aunque por defecto `DEBUG_ENABLE` ya esta activado.
 
 Se hace uso de la libreria [colors](https://github.com/desmonHak/colors-C-C-plus-plus)
 

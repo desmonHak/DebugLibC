@@ -271,15 +271,6 @@ LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS *ExceptionInfo) {
     return EXCEPTION_EXECUTE_HANDLER; // Manejar la excepcion
 }
 #else // linux
-#define _GNU_SOURCE
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <signal.h>
-#include <ucontext.h>
-#include <execinfo.h>
-#include <unistd.h>
-#include <inttypes.h>
 
 void signalHandler(int sig, siginfo_t *info, void *context) {
     ucontext_t *uc = (ucontext_t *)context;

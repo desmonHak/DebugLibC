@@ -27,6 +27,8 @@ En caso de que en su codigo se producto algun tipo de error, al incluiir la libr
 
 > Cabe mencionar que tambiene puede usar la macro ``_ExceptionHandler_WIN_``  que hara lo mismo que 
 > `_ExceptionHandler`, la primera se mantiene por retrocompatibilidad con versiones anteriores de la > libreria.
+>
+> Si compila para linux existe la posibillidad de que le salga varios errores de este tipo: `error: unknown type name ‘siginfo_t’`, esto se puede solucionar compilando con la opcion `-D_GNU_SOURCE`
 
 ### Macro ``DEBUG_PRINT``
 

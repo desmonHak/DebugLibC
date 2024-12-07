@@ -125,7 +125,19 @@ void __attribute__((destructor)) __destructor_debug_c__();
 #define _ExceptionHandler_WIN_
 LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS *ExceptionInfo);
 #endif
+#else
+#define _GNU_SOURCE
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <signal.h>
+#include <ucontext.h>
+#include <execinfo.h>
+#include <unistd.h>
+#include <inttypes.h>
+void signalHandler(int sig, siginfo_t *info, void *context);
 #endif
+
 //static FILE *logFile = NULL;
 
 

@@ -72,7 +72,11 @@ static const char* ExceptionCodeDescription( const unsigned int code )
 
 LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS *ExceptionInfo) {
     EXCEPTION_RECORD *registro_excepcion = ExceptionInfo->ExceptionRecord;
+    #ifdef _MSC_VER
+    WOW64_CONTEXT *registro_contexto  = ExceptionInfo->ContextRecord;
+    #else
     CONTEXT         *registro_contexto  = ExceptionInfo->ContextRecord;
+    #endif
 
     printf("Se ha producido una excepcion (codigo 0x%lx) en la direccion 0x%p\n\n", 
         registro_excepcion->ExceptionCode, registro_excepcion->ExceptionAddress);
@@ -253,7 +257,7 @@ LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS *ExceptionInfo) {
             registro_contexto->Esp,         registro_contexto->SegSs
 
         );
-        
+        #define MAXIMUM_SUPPORTED_EXTENSION 256
         tab = MAXIMUM_SUPPORTED_EXTENSION / 16;
         for (size_t i = 0; i < MAXIMUM_SUPPORTED_EXTENSION; i++){
             if ((i % tab) == 0) printf("\n\t\t");

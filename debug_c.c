@@ -311,7 +311,12 @@ void signalHandler(int sig, siginfo_t *info, void *context) {
 #endif
 #endif
 
-void __attribute__((constructor)) __constructor_debug_c__(){
+#ifdef _MSC_VER
+void __constructor_debug_c__()
+#else
+void __attribute__((constructor)) __constructor_debug_c__()
+#endif
+{
     //debug_set_log_file("debug_log.txt");
     //open_file(&Log_debug_file, NAME_DEFAULT_LOG_DEBUG, READ_WRITE );
     #if defined(_ExceptionHandler)
@@ -337,7 +342,12 @@ void __attribute__((constructor)) __constructor_debug_c__(){
     }*/
 
 }
-void __attribute__((destructor)) __destructor_debug_c__(){
+#ifdef _MSC_VER
+void __destructor_debug_c__()
+#else
+void __attribute__((destructor)) __destructor_debug_c__()
+#endif
+{
     /*if (logFile != NULL)
     {
         fclose(logFile);

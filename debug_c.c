@@ -257,7 +257,9 @@ LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS *ExceptionInfo) {
             registro_contexto->Esp,         registro_contexto->SegSs
 
         );
-        #define MAXIMUM_SUPPORTED_EXTENSION 256
+        #ifndef MAXIMUM_SUPPORTED_EXTENSION
+        #define MAXIMUM_SUPPORTED_EXTENSION 512
+        #endif
         tab = MAXIMUM_SUPPORTED_EXTENSION / 16;
         for (size_t i = 0; i < MAXIMUM_SUPPORTED_EXTENSION; i++){
             if ((i % tab) == 0) printf("\n\t\t");

@@ -21,7 +21,8 @@ void error_print(const Error *err)
         level_str = "Unknown";
         break;
     }
-    fprintf(stderr, "[%s] %s (%s:%d)\n", level_str, err->message, err->file, err->line);
+
+    printf_color("[%s] %s (%s:%d)\n", level_str, err->message, err->file, err->line);
 }
 
 void error_log(const Error *err)

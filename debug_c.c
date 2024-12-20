@@ -429,7 +429,7 @@ void debug_print(DebugLevel level, const char *fmt, ...)
         char *message = malloc(size * sizeof(char));
         vsnprintf(message, size, fmt, args);
         va_end(args);
-        
+
         ERROR_C(ERROR_LEVEL_ERROR, message);
     }
 }

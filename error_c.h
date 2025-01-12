@@ -28,10 +28,10 @@ void error_log(const Error *err);
         Error err = {.message = msg, .file = __FILE__, .line = __LINE__, .level_c = level}; \
         error_print(&err);                                                                \
         error_log(&err);                                                                  \
-        if (level == ERROR_LEVEL_ERROR)                                                   \
+        /*if (level == ERROR_LEVEL_ERROR)                                                   \
         {                                                                                 \
             exit(EXIT_FAILURE);                                                           \
-        }                                                                                 \
+        } */                                                                                \
     } while (0)
 
 

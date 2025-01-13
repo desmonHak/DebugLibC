@@ -15,7 +15,7 @@ void __destructor_time_contador__(){
     // Calcula el tiempo total de ejecución en segundos
     tiempo_total = (double)(fin.QuadPart - inicio.QuadPart) / frecuencia.QuadPart;
     debug_set_level(DEBUG_LEVEL_INFO);
-    LETTER_LIGHTYELLOW_EX;
+    SET_FG_LIGHTYELLOW;
     DEBUG_PRINT(DEBUG_LEVEL_INFO, "#{FG:white} El programa tardo #{FG:red}%.6f#{FG:white} segundos en ejecutarse.\n", tiempo_total);
     
 }

@@ -36,7 +36,7 @@ En caso de que en su codigo se producto algun tipo de error, al incluiir la libr
 La macro `DEBUG_PRINT` es una macro que permite imprimir mensajes de debug en la consola, esta macro se define en el archivo `debug_c.h` y se define como:
 
 ```c
-#define DEBUG_PRINT(level, fmt, ...) debug_print(level, "#{FG:lgreen}[#{FG:lpurple}%s#{FG:reset}:#{FG:cyan}%s#{FG:reset}:#{FG:red}%03d#{FG:green}]#{FG:reset} " fmt , get_level_debug(level), __FILE__, __LINE__, ##__VA_ARGS__)
+#define DEBUG_PRINT(level, fmt, ...) debug_print(level, "#{FG:lgreen}[#{FG:lpurple}%s#{reset}:#{FG:cyan}%s#{reset}:#{FG:red}%03d#{FG:green}]#{reset} " fmt , get_level_debug(level), __FILE__, __LINE__, ##__VA_ARGS__)
 ```
 
 Esta macro solo sera usada si la macro `DEBUG_ENABLE` esta definida y ademas usa la funcion `debug_print` la cual usa `printf_color`. Usted puede hacer un `#undef DEBUG_ENABLE` y redefinir la macro para que imprima usando algun formato diferente o aporte alguna otra funcionalidad.

@@ -237,7 +237,7 @@ int main() {
 
         put(hashTable, key, val);
         debug_set_level(DEBUG_LEVEL_INFO);
-        DEBUG_PRINT(DEBUG_LEVEL_INFO, "#{FG:white}Value for key '%s': %d#{FG:reset}\n", key, *((unsigned char*)get(hashTable, key)));
+        DEBUG_PRINT(DEBUG_LEVEL_INFO, "#{FG:white}Value for key '%s': %d#{reset}\n", key, *((unsigned char*)get(hashTable, key)));
     }
 
     // Get values

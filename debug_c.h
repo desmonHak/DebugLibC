@@ -38,12 +38,15 @@
 #include "./colors-C-C-plus-plus/colors.h"
 #include "error_c.h"
 
+#pragma comment(lib, "libcolors.a")
+
+
 //#include "WL_lib.h"
 //#define NAME_DEFAULT_LOG_DEBUG "debug_log.txt"
 //MyFile Log_debug_file;
 
 #ifdef DEBUG_ENABLE
-#define DEBUG_PRINT(level, fmt, ...) debug_print(level, "#{FG:lgreen}[#{FG:lpurple}%s#{FG:reset}:#{FG:cyan}%s#{FG:reset}:#{FG:red}%03d#{FG:green}]#{FG:reset} " fmt , get_level_debug(level), __FILE__, __LINE__, ##__VA_ARGS__)
+#define DEBUG_PRINT(level, fmt, ...) debug_print(level, "#{FG:lgreen}[#{FG:lpurple}%s#{reset}:#{FG:cyan}%s#{reset}:#{FG:red}%03d#{FG:green}]#{reset} " fmt , get_level_debug(level), __FILE__, __LINE__, ##__VA_ARGS__)
 
 #else
 #define DEBUG_PRINT(level, fmt, ...)
@@ -52,7 +55,7 @@
 
 #define INIT_TYPE_FUNC_DBG(type_return, name_func) "#{FG:lred} "#type_return" #{FG:cyan}"#name_func"#{FG:white}("
 #define TYPE_DATA_DBG(type_data, name_arg) " #{FG:lyellow}"#type_data" #{FG:white} "name_arg", "
-#define END_TYPE_FUNC_DBG "#{FG:white}); #{FG:reset}\n"
+#define END_TYPE_FUNC_DBG "#{FG:white}); #{reset}\n"
 
 typedef enum
 {

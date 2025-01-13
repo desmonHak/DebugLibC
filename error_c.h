@@ -34,6 +34,7 @@ void error_log(const Error *err);
         } */                                                                                \
     } while (0)
 
-
+#ifdef INCLUDE_COLORS_C
 #include "error_c.c"
+#endif
 #endif 

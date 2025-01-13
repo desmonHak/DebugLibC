@@ -21,5 +21,7 @@ void __attribute__((constructor)) __constructor_time_contador__();
 void __attribute__((destructor)) __destructor_time_contador__();
 #endif
 
+#ifdef INCLUDE_COLORS_C
 #include "time_code.c"
+#endif
 #endif

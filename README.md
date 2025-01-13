@@ -7,10 +7,12 @@
 Una pequeña lib para el debug y mostrar informacion. Usted puede compilar el archivo `hash.c` como muestra usando lo siguiente:
 
 ```bash
-gcc -DDEBUG_ENABLE hash.c -o hash.elf
+gcc -DDEBUG_ENABLE -I. -Icolors-C-C-plus-plus example/hash.c -L. -ldebug -Lcolors-C-C-plus-plus -lcolors hash.c -o hash.elf
 ```
 
-Aunque por defecto `DEBUG_ENABLE` ya esta activado.
+> Aunque por defecto `DEBUG_ENABLE` ya esta activado.
+
+Aqui lo que se realiza es el linkado con la libreria colors `-Lcolors-C-C-plus-plus -lcolors` y con la libreria actual `-L. -ldebug`, ademas podemos indicar donde se encuentra nuestros archivos de cabecera con `-I. -Icolors-C-C-plus-plus`
 
 Se hace uso de la libreria [colors](https://github.com/desmonHak/colors-C-C-plus-plus)
 

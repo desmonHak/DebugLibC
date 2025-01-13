@@ -35,11 +35,11 @@
 
 #include <stdio.h>
 #include <stdarg.h>
-#include "./colors-C-C-plus-plus/colors.h"
+#include "colors.h"
 #include "error_c.h"
 
 #pragma comment(lib, "libcolors.a")
-
+#pragma comment(lib, "libdebug.a")
 
 //#include "WL_lib.h"
 //#define NAME_DEFAULT_LOG_DEBUG "debug_log.txt"
@@ -143,6 +143,7 @@ void signalHandler(int sig, siginfo_t *info, void *context);
 
 //static FILE *logFile = NULL;
 
-
+#ifdef INCLUDE_COLORS_C
 #include "debug_c.c"
-#endif 
+#endif
+#endif

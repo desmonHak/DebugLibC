@@ -6,12 +6,12 @@
 #include <stdio.h>
 #ifdef _WIN32
 #include <windows.h>
-LARGE_INTEGER inicio, fin, frecuencia;
+static LARGE_INTEGER inicio, fin, frecuencia;
 #else
 #include <time.h>
 struct timespec inicio, fin;
 #endif
-double tiempo_total;
+static double tiempo_total;
 
 #ifdef _MSC_VER
 void __constructor_time_contador__();

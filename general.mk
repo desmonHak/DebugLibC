@@ -23,7 +23,7 @@ time_code.o: $(PATH_SRC)/time_code.c
 	$(CC) $(CFLAGS) -c $^ -o $@
 
 cleanobj:
-	$(RM) $(RMFLAGS) $(OBJECTS)
+	$(RM) $(RMFLAGS) $(OBJECTS) $(OBJECTS_DEBUG)
 	$(MAKE) -C ./$(PATH_COLORS) -f $(MAKE_NAME) cleanobj
 
 cleanall: cleanobj

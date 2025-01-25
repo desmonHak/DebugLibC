@@ -3,6 +3,8 @@
 
 #include "error_c.h"
 
+extern void printf_color(const char *format, ...);
+
 void error_print(const Error *err)
 {
     const char *level_str;

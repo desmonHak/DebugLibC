@@ -9,7 +9,7 @@
 static LARGE_INTEGER inicio, fin, frecuencia;
 #else
 #include <time.h>
-struct timespec inicio, fin;
+static struct timespec inicio, fin;
 #endif
 static double tiempo_total;
 

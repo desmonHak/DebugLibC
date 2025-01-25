@@ -12,7 +12,7 @@ LINKER_FLAGS  	  =  -L. -ldebug -L$(PATH_COLORS) -lcolors
 
 INCLUDE_FLAGS = -I. -I$(PATH_COLORS)
 GLOBAL_CFLAGS = -std=c$(VESRION_C) $(INCLUDE_FLAGS) -masm=intel \
-				-D_ExceptionHandler -fdiagnostics-color=always
+				-D_ExceptionHandler -fdiagnostics-color=always -D_GNU_SOURCE $(DEBUG_LINUX)
 
 CFLAGS 		  =  $(GLOBAL_CFLAGS) -O3 -Wno-unused-parameter \
 				-Wno-implicit-fallthrough -Wno-type-limits  \

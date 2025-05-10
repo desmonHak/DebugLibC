@@ -116,7 +116,7 @@ void put(HashTable* hashTable, const char* key, void* value) {
     //printf("put: %zu\n", index);
 
     //Entry* entry = (Entry*)malloc(sizeof(Entry));
-    Entry* entry;
+    Entry* entry = NULL;
     debug_malloc(Entry, entry, sizeof(Entry));
 
     entry->key = strdup(key);

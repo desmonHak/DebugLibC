@@ -82,8 +82,8 @@ LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS *ExceptionInfo) {
         registro_excepcion->ExceptionCode, registro_excepcion->ExceptionAddress);
 
     printf( 
-            "\tDWORD  ExceptionCode     = 0x%p = %s;\n"
-            "\tDWORD  ExceptionFlags    = 0x%p;\n"
+            "\tDWORD  ExceptionCode     = 0x%lu = %s;\n"
+            "\tDWORD  ExceptionFlags    = 0x%lu;\n"
             "\tSIZE_T ExceptionRecord   = 0x%p;\n"
             "\tSIZE_T ExceptionAddress  = 0x%p;\n"
             "\tDWORD  NumberParameters  = %u;\n"
@@ -97,18 +97,18 @@ LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS *ExceptionInfo) {
         uint8_t tab = EXCEPTION_MAXIMUM_PARAMETERS / 4;
         for (size_t i = 0; i < EXCEPTION_MAXIMUM_PARAMETERS; i++){
             if ((i % tab) == 0) printf("\n\t\t");
-            printf(" %p,", registro_excepcion->ExceptionInformation[i]);
+            printf(" %llu,", registro_excepcion->ExceptionInformation[i]);
         }
 
         printf("\n\t}\n\n");
         #ifdef __x86_64__
         printf(
-            "\tDWORD64 P1Home       = %p;\n"
-            "\tDWORD64 P2Home       = %p;\n"
-            "\tDWORD64 P3Home       = %p;\n"
-            "\tDWORD64 P4Home       = %p;\n"
-            "\tDWORD64 P5Home       = %p;\n"
-            "\tDWORD64 P6Home       = %p;\n"
+            "\tDWORD64 P1Home       = %llu;\n"
+            "\tDWORD64 P2Home       = %llu;\n"
+            "\tDWORD64 P3Home       = %llu;\n"
+            "\tDWORD64 P4Home       = %llu;\n"
+            "\tDWORD64 P5Home       = %llu;\n"
+            "\tDWORD64 P6Home       = %llu;\n"
             "\tDWORD   ContextFlags = %08x;\n"
             "\tDWORD   MxCsr        = %08x;\n"
             "\tWORD    SegCs        = %04x;\n"
@@ -118,31 +118,31 @@ LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS *ExceptionInfo) {
             "\tWORD    SegGs        = %04x;\n"
             "\tWORD    SegSs        = %04x;\n"
             "\tDWORD   EFlags       = %08x;\n"
-            "\tDWORD64 Dr0          = %p;\n"
-            "\tDWORD64 Dr1          = %p;\n"
-            "\tDWORD64 Dr2          = %p;\n"
+            "\tDWORD64 Dr0          = %hu;\n"
+            "\tDWORD64 Dr1          = %lu;\n"
+            "\tDWORD64 Dr2          = %llu;\n"
             "\tDWORD64 Dr3          = %p;\n"
-            "\tDWORD64 Dr6          = %p;\n"
-            "\tDWORD64 Dr7          = %p;\n"
+            "\tDWORD64 Dr6          = %llu;\n"
+            "\tDWORD64 Dr7          = %llu;\n"
             "\tDWORD64 Rax          = %p;\n"
-            "\tDWORD64 Rcx          = %p;\n"
-            "\tDWORD64 Rdx          = %p;\n"
+            "\tDWORD64 Rcx          = %llu;\n"
+            "\tDWORD64 Rdx          = %llu;\n"
             "\tDWORD64 Rbx          = %p;\n"
-            "\tDWORD64 Rsp          = %p;\n"
-            "\tDWORD64 Rbp          = %p;\n"
+            "\tDWORD64 Rsp          = %llu;\n"
+            "\tDWORD64 Rbp          = %llu;\n"
             "\tDWORD64 Rsi          = %p;\n"
             "\tDWORD64 Rdi          = %p;\n"
-            "\tDWORD64 R8           = %p;\n"
-            "\tDWORD64 R9           = %p;\n"
+            "\tDWORD64 R8           = %llu;\n"
+            "\tDWORD64 R9           = %llu;\n"
             "\tDWORD64 R10          = %p;\n"
             "\tDWORD64 R11          = %p;\n"
-            "\tDWORD64 R12          = %p;\n"
-            "\tDWORD64 R13          = %p;\n"
-            "\tDWORD64 R14          = %p;\n"
-            "\tDWORD64 R15          = %p;\n"
+            "\tDWORD64 R12          = %llu;\n"
+            "\tDWORD64 R13          = %llu;\n"
+            "\tDWORD64 R14          = %llu;\n"
+            "\tDWORD64 R15          = %llu;\n"
             "\tDWORD64 Rip          = %p;\n"
-            "\tM128A   Header[2]    = { %p%p, %p%p };\n"
-            "\tM128A   Legacy[8]    = { \n\t\t%p%p, %p%p, \n\t\t%p%p, %p%p, \n\t\t%p%p, %p%p, \n\t\t%p%p, %p%p };\n"
+            "\tM128A   Header[2]    = { %llu%llu, %llu%llu };\n"
+            "\tM128A   Legacy[8]    = { \n\t\t%llu%llu, %p%p, \n\t\t%p%p, %p%p, \n\t\t%p%p, %p%p, \n\t\t%p%p, %p%p };\n"
             "\tM128A   Xmm0         = %p%p;\n"
             "\tM128A   Xmm1         = %p%p;\n"
             "\tM128A   Xmm2         = %p%p;\n"
@@ -204,12 +204,12 @@ LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS *ExceptionInfo) {
         }
         printf("\n\t}\n");
         printf(
-            "\tDWORD64 VectorControl        = %p;\n"
-            "\tDWORD64 DebugControl         = %p;\n"
-            "\tDWORD64 LastBranchToRip      = %p;\n"
-            "\tDWORD64 LastBranchFromRip    = %p;\n"
-            "\tDWORD64 LastExceptionToRip   = %p;\n"
-            "\tDWORD64 LastExceptionFromRip = %p;\n",
+            "\tDWORD64 VectorControl        = %llu;\n"
+            "\tDWORD64 DebugControl         = %llu;\n"
+            "\tDWORD64 LastBranchToRip      = %llu;\n"
+            "\tDWORD64 LastBranchFromRip    = %llu;\n"
+            "\tDWORD64 LastExceptionToRip   = %llu;\n"
+            "\tDWORD64 LastExceptionFromRip = %llu;\n",
             registro_contexto->VectorControl,
             registro_contexto->DebugControl,
             registro_contexto->LastBranchToRip,
@@ -353,7 +353,7 @@ void __attribute__((destructor)) __destructor_debug_c__()
     /*close_file(&Log_debug_file);*/
 }
 
-const char* get_level_debug(DebugLevel level) {
+const char* get_level_debug(const DebugLevel level) {
     switch(level){
 
     case DEBUG_LEVEL_INFO:
@@ -382,12 +382,12 @@ const char* get_level_debug(DebugLevel level) {
     logFile = fopen(filename, "w");
 }*/
 
-void debug_set_level(DebugLevel level)
+void debug_set_level(const DebugLevel level)
 {
     currentLevel = level;
 }
 
-void debug_print(DebugLevel level, const char *fmt, ...)
+void debug_print(const DebugLevel level, const char *fmt, ...)
 {
     if (fmt == (const char *)NULL) return;
     if (level < currentLevel)

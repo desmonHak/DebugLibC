@@ -53,7 +53,7 @@ typedef struct HashTable {
     Entry** table;
 } HashTable;
 
-unsigned long hash(const char* str, size_t size) {
+unsigned long hash(const char* str, const size_t size) {
     #ifdef DEBUG_ENABLE
         DEBUG_PRINT(DEBUG_LEVEL_INFO,
             INIT_TYPE_FUNC_DBG(unsigned long, hash)
@@ -79,8 +79,9 @@ HashTable* createHashTable(size_t size) {
             END_TYPE_FUNC_DBG,
             size);
     #endif
-    HashTable* hashTable; //= (HashTable*)malloc(sizeof(HashTable));
+    HashTable* hashTable = NULL; //= (HashTable*)malloc(sizeof(HashTable));
     debug_malloc(HashTable, hashTable, sizeof(HashTable) * 1);
+    if (hashTable == NULL) return NULL;
 
     hashTable->size = 0;
     hashTable->capacity = size;
@@ -118,6 +119,7 @@ void put(HashTable* hashTable, const char* key, void* value) {
     //Entry* entry = (Entry*)malloc(sizeof(Entry));
     Entry* entry = NULL;
     debug_malloc(Entry, entry, sizeof(Entry));
+    if (entry == NULL) return;
 
     entry->key = strdup(key);
     entry->value = value;
@@ -130,6 +132,7 @@ void put(HashTable* hashTable, const char* key, void* value) {
         Entry* current = hashTable->table[index];
         while (current->next != NULL) {
             if (strcmp(current->key, key) == 0) {
+                if (current->value != NULL) free(current->value);
                 current->value = value;
                 free(entry->key);
                 free(entry);
@@ -147,7 +150,7 @@ void put(HashTable* hashTable, const char* key, void* value) {
 
         // Rehash and reinsert existing elements
         for (size_t i = 0; i < hashTable->capacity; i++) {
-            Entry* entry = hashTable->table[i];
+            entry = hashTable->table[i];
             while (entry != NULL) {
                 Entry* next = entry->next;
                 size_t newIndex = hash(entry->key, newSize);
@@ -177,6 +180,7 @@ void* get(HashTable* hashTable, const char* key) {
     if (hashTable == NULL){
         debug_set_level(DEBUG_LEVEL_WARNING);
         DEBUG_PRINT(DEBUG_LEVEL_WARNING, "get(HashTable* hashTable = %p, const char* key = NULL(%p))\n", hashTable, key);
+        return NULL;
     }
     #endif
 
@@ -205,6 +209,7 @@ void printHashTable(HashTable* hashTable) {
     if (hashTable == NULL){
         debug_set_level(DEBUG_LEVEL_INFO);
         DEBUG_PRINT(DEBUG_LEVEL_INFO, "printHashTable: NULL(%p)\n", hashTable);
+        return;
     }
     #endif
     for (size_t i = 0; i < hashTable->capacity; i++) {
@@ -227,6 +232,7 @@ void freeHashTable(HashTable* hashTable) {
     if (hashTable == NULL){
         debug_set_level(DEBUG_LEVEL_INFO);
         DEBUG_PRINT(DEBUG_LEVEL_INFO, "freeHashTable: NULL(%p)\n", hashTable);
+        return;
     }
     #endif
     for (size_t i = 0; i < hashTable->size; i++) {
@@ -261,15 +267,15 @@ int main() {
     //debug_set_log_file("debug_log.txt");
     for (size_t i = 0; i < 200; i++) {
         int* val = malloc(sizeof(int));
-        *val = i;
+        *val = (int)i;
         unsigned char key[2];
         key[0] = 'A' + i% 'Z'; // Assuming the keys are 'A' to 'J'
         key[1] = '\0';
         //printf("%s\n", key);
 
-        put(hashTable, key, val);
+        put(hashTable, (const char *)key, val);
         debug_set_level(DEBUG_LEVEL_INFO);
-        DEBUG_PRINT(DEBUG_LEVEL_INFO, "#{FG:white}Value for key '%s': %d#{reset}\n", key, *((unsigned char*)get(hashTable, key)));
+        DEBUG_PRINT(DEBUG_LEVEL_INFO, "#{FG:white}Value for key '%s': %d#{reset}\n", key, *((unsigned char*)get(hashTable, (const char *)key)));
     }
 
     // Get values
@@ -291,6 +297,7 @@ int main() {
     */
 
     //print_table_hex(" ", hashTable, 500);
+
 
     // Free memory
     freeHashTable(hashTable);

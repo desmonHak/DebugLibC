@@ -35,25 +35,35 @@
 
 #include "debug_c.h"
 
+#if defined(__GNUC__) || defined(__clang__)
+#   define UNUSED __attribute__((unused))
+#elif defined(_MSC_VER)
+#   define UNUSED __pragma(warning(suppress:4101))
+#else
+#   define UNUSED
+#endif
+
+
 #include <stdio.h>
 #ifdef _WIN32
-#include <windows.h>
+#   include <windows.h>
 static LARGE_INTEGER inicio, fin, frecuencia;
 #else
-#include <time.h>
-static struct timespec inicio, fin;
+#   include <time.h>
+static struct timespec UNUSED inicio, UNUSED fin;
 #endif
-static double tiempo_total;
+static double UNUSED tiempo_total;
 
 #ifdef _MSC_VER
 void __constructor_time_contador__();
 void __destructor_time_contador__();
 #else
 void __attribute__((constructor)) __constructor_time_contador__();
+
 void __attribute__((destructor)) __destructor_time_contador__();
 #endif
 
 #ifdef INCLUDE_COLORS_C
-#include "time_code.c"
+#   include "time_code.c"
 #endif
 #endif

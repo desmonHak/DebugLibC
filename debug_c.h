@@ -62,12 +62,16 @@ typedef enum
 {
      DEBUG_LEVEL_INFO,
      DEBUG_LEVEL_WARNING,
-     DEBUG_LEVEL_ERROR
+     DEBUG_LEVEL_ERROR,
+
+     DEBUG_LEVEL_UNKNOWN
 } DebugLevel;
-#ifndef _MSC_VER
-#   define IS_USED __attribute__((used))
-#else
-#   define IS_USED
+#ifndef IS_USED
+#   ifndef _MSC_VER
+#       define IS_USED __attribute__((used))
+#   else
+#       define IS_USED
+#   endif
 #endif
 static IS_USED DebugLevel currentLevel = DEBUG_LEVEL_INFO; // nivel de debbug del programa por default
 
@@ -75,6 +79,8 @@ static IS_USED const char* ErrorLevelStrings[] = {
      "INFO",
      "WARNING",
      "ERROR",
+
+     [DEBUG_LEVEL_UNKNOWN] = "UNKNOW"
  };
 
  typedef struct {
@@ -119,7 +125,10 @@ static IS_USED const char* ErrorLevelStrings[] = {
 
  const char* get_level_debug(DebugLevel level);
  //void debug_set_log_file(const char *filename);
- void debug_set_level(DebugLevel level);
+static inline void debug_set_level(const DebugLevel level)
+{
+    currentLevel = level;
+}
  void debug_print(DebugLevel level, const char *fmt, ...);
  #ifdef _MSC_VER
  void __constructor_debug_c__();

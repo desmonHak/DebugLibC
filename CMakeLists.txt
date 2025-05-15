@@ -16,7 +16,6 @@ endif()
 # Configuraciones específicas por tipo de compilación
 set(CMAKE_C_FLAGS_DEBUG "-g -O0 -Wall -Wpedantic")
 set(CMAKE_C_FLAGS_RELEASE "-O3 -DNDEBUG")
-set(CMAKE_C_STANDARD 23)
 
 add_executable(hash
         colors-C-C-plus-plus/src/colors.c

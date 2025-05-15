@@ -86,11 +86,11 @@ LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS *ExceptionInfo) {
             "\tDWORD  ExceptionFlags    = 0x%lu;\n"
             "\tSIZE_T ExceptionRecord   = 0x%p;\n"
             "\tSIZE_T ExceptionAddress  = 0x%p;\n"
-            "\tDWORD  NumberParameters  = %u;\n"
+            "\tDWORD  NumberParameters  = %lu;\n"
             "\tSIZE_T ExceptionInformation[EXCEPTION_MAXIMUM_PARAMETERS] = {", 
             registro_excepcion->ExceptionCode, ExceptionCodeDescription(registro_excepcion->ExceptionCode),
             registro_excepcion->ExceptionFlags, 
-            registro_excepcion->ExceptionRecord, 
+            (void*)(registro_excepcion->ExceptionRecord),
             registro_excepcion->ExceptionAddress,
             registro_excepcion->NumberParameters
         );
@@ -102,100 +102,78 @@ LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS *ExceptionInfo) {
 
         printf("\n\t}\n\n");
         #ifdef __x86_64__
-        printf(
-            "\tDWORD64 P1Home       = %llu;\n"
-            "\tDWORD64 P2Home       = %llu;\n"
-            "\tDWORD64 P3Home       = %llu;\n"
-            "\tDWORD64 P4Home       = %llu;\n"
-            "\tDWORD64 P5Home       = %llu;\n"
-            "\tDWORD64 P6Home       = %llu;\n"
-            "\tDWORD   ContextFlags = %08x;\n"
-            "\tDWORD   MxCsr        = %08x;\n"
-            "\tWORD    SegCs        = %04x;\n"
-            "\tWORD    SegDs        = %04x;\n"
-            "\tWORD    SegEs        = %04x;\n"
-            "\tWORD    SegFs        = %04x;\n"
-            "\tWORD    SegGs        = %04x;\n"
-            "\tWORD    SegSs        = %04x;\n"
-            "\tDWORD   EFlags       = %08x;\n"
-            "\tDWORD64 Dr0          = %hu;\n"
-            "\tDWORD64 Dr1          = %lu;\n"
-            "\tDWORD64 Dr2          = %llu;\n"
-            "\tDWORD64 Dr3          = %p;\n"
-            "\tDWORD64 Dr6          = %llu;\n"
-            "\tDWORD64 Dr7          = %llu;\n"
-            "\tDWORD64 Rax          = %p;\n"
-            "\tDWORD64 Rcx          = %llu;\n"
-            "\tDWORD64 Rdx          = %llu;\n"
-            "\tDWORD64 Rbx          = %p;\n"
-            "\tDWORD64 Rsp          = %llu;\n"
-            "\tDWORD64 Rbp          = %llu;\n"
-            "\tDWORD64 Rsi          = %p;\n"
-            "\tDWORD64 Rdi          = %p;\n"
-            "\tDWORD64 R8           = %llu;\n"
-            "\tDWORD64 R9           = %llu;\n"
-            "\tDWORD64 R10          = %p;\n"
-            "\tDWORD64 R11          = %p;\n"
-            "\tDWORD64 R12          = %llu;\n"
-            "\tDWORD64 R13          = %llu;\n"
-            "\tDWORD64 R14          = %llu;\n"
-            "\tDWORD64 R15          = %llu;\n"
-            "\tDWORD64 Rip          = %p;\n"
-            "\tM128A   Header[2]    = { %llu%llu, %llu%llu };\n"
-            "\tM128A   Legacy[8]    = { \n\t\t%llu%llu, %p%p, \n\t\t%p%p, %p%p, \n\t\t%p%p, %p%p, \n\t\t%p%p, %p%p };\n"
-            "\tM128A   Xmm0         = %p%p;\n"
-            "\tM128A   Xmm1         = %p%p;\n"
-            "\tM128A   Xmm2         = %p%p;\n"
-            "\tM128A   Xmm3         = %p%p;\n"
-            "\tM128A   Xmm4         = %p%p;\n"
-            "\tM128A   Xmm5         = %p%p;\n"
-            "\tM128A   Xmm6         = %p%p;\n"
-            "\tM128A   Xmm7         = %p%p;\n"
-            "\tM128A   Xmm8         = %p%p;\n"
-            "\tM128A   Xmm9         = %p%p;\n"
-            "\tM128A   Xmm10        = %p%p;\n"
-            "\tM128A   Xmm11        = %p%p;\n"
-            "\tM128A   Xmm12        = %p%p;\n"
-            "\tM128A   Xmm13        = %p%p;\n"
-            "\tM128A   Xmm14        = %p%p;\n"
-            "\tM128A   Xmm15        = %p%p;\n"
-            "\tM128A   VectorRegister[26] = ",
-                registro_contexto->P1Home, registro_contexto->P2Home,
-                registro_contexto->P3Home, registro_contexto->P4Home,
-                registro_contexto->P5Home, registro_contexto->P6Home,
-                registro_contexto->ContextFlags,
-                registro_contexto->MxCsr,
-                registro_contexto->SegCs,  registro_contexto->SegDs,
-                registro_contexto->SegEs,  registro_contexto->SegFs,
-                registro_contexto->SegGs,  registro_contexto->P1Home,
-                registro_contexto->SegCs,  registro_contexto->SegSs,
-                registro_contexto->EFlags, 
-                registro_contexto->Dr0,    registro_contexto->Dr1,
-                registro_contexto->Dr2,    registro_contexto->Dr3,
-                registro_contexto->Dr6,    registro_contexto->Dr7,
-                registro_contexto->Rax,    registro_contexto->Rcx,
-                registro_contexto->Rdx,    registro_contexto->Rbx,
-                registro_contexto->Rsp,    registro_contexto->Rbp,
-                registro_contexto->Rsi,    registro_contexto->Rcx,
-                registro_contexto->Rax,    registro_contexto->Rdi,
-                registro_contexto->R8,     registro_contexto->R9,
-                registro_contexto->R10,    registro_contexto->R11,
-                registro_contexto->R12,    registro_contexto->R13,
-                registro_contexto->R14,    registro_contexto->R15,
-                registro_contexto->Rip,    
-                registro_contexto->R8,     registro_contexto->R9,
-                registro_contexto->Xmm0,   registro_contexto->Xmm1,
-                registro_contexto->Xmm2,   registro_contexto->Xmm3,
-                registro_contexto->Xmm4,   registro_contexto->Xmm5,
-                registro_contexto->Xmm6,   registro_contexto->Xmm7,
-                registro_contexto->Xmm8,   registro_contexto->Xmm9,
-                registro_contexto->Xmm10,  registro_contexto->Xmm11,
-                registro_contexto->Xmm12,  registro_contexto->Xmm13,
-                registro_contexto->Xmm14,  registro_contexto->Xmm15
-                
-                
+        printf("\tDWORD64 P1Home       = %llu;\n", registro_contexto->P1Home);
+        printf("\tDWORD64 P2Home       = %llu;\n", registro_contexto->P2Home);
+        printf("\tDWORD64 P3Home       = %llu;\n", registro_contexto->P3Home);
+        printf("\tDWORD64 P4Home       = %llu;\n", registro_contexto->P4Home);
+        printf("\tDWORD64 P5Home       = %llu;\n", registro_contexto->P5Home);
+        printf("\tDWORD64 P6Home       = %llu;\n", registro_contexto->P6Home);
+        printf("\tDWORD   ContextFlags = %08lx;\n", registro_contexto->ContextFlags);
+        printf("\tDWORD   MxCsr        = %08lx;\n", registro_contexto->MxCsr);
+        printf("\tWORD    SegCs        = %04x;\n", registro_contexto->SegCs);
+        printf("\tWORD    SegDs        = %04x;\n", registro_contexto->SegDs);
+        printf("\tWORD    SegEs        = %04x;\n", registro_contexto->SegEs);
+        printf("\tWORD    SegFs        = %04x;\n", registro_contexto->SegFs);
+        printf("\tWORD    SegGs        = %04x;\n", registro_contexto->SegGs);
+        printf("\tWORD    P1Home       = %08llx;\n", registro_contexto->P1Home);
+        printf("\tDWORD   EFlags       = %08lx;\n", registro_contexto->EFlags);
+        printf("\tDWORD64 Dr0          = %llu;\n", registro_contexto->Dr0);
+        printf("\tDWORD64 Dr1          = %llu;\n", registro_contexto->Dr1);
+        printf("\tDWORD64 Dr2          = %llu;\n", registro_contexto->Dr2);
+        printf("\tDWORD64 Dr3          = %llu;\n", registro_contexto->Dr3);
+        printf("\tDWORD64 Dr6          = %llu;\n", registro_contexto->Dr6);
+        printf("\tDWORD64 Dr7          = %llu;\n", registro_contexto->Dr7);
+        printf("\tDWORD64 Rax          = %llu;\n", registro_contexto->Rax);
+        printf("\tDWORD64 Rcx          = %llu;\n", registro_contexto->Rcx);
+        printf("\tDWORD64 Rdx          = %llu;\n", registro_contexto->Rdx);
+        printf("\tDWORD64 Rbx          = %llu;\n", registro_contexto->Rbx);
+        printf("\tDWORD64 Rsp          = %llu;\n", registro_contexto->Rsp);
+        printf("\tDWORD64 Rbp          = %llu;\n", registro_contexto->Rbp);
+        printf("\tDWORD64 Rsi          = %llu;\n", registro_contexto->Rsi);
+        printf("\tDWORD64 Rdi          = %llu;\n", registro_contexto->Rdi);
+        printf("\tDWORD64 R8           = %llu;\n", registro_contexto->R8);
+        printf("\tDWORD64 R9           = %llu;\n", registro_contexto->R9);
+        printf("\tDWORD64 R10          = %llu;\n", registro_contexto->R10);
+        printf("\tDWORD64 R11          = %llu;\n", registro_contexto->R11);
+        printf("\tDWORD64 R12          = %llu;\n", registro_contexto->R12);
+        printf("\tDWORD64 R13          = %llu;\n", registro_contexto->R13);
+        printf("\tDWORD64 R14          = %llu;\n", registro_contexto->R14);
+        printf("\tDWORD64 R15          = %llu;\n", registro_contexto->R15);
+        printf("\tDWORD64 Rip          = %llu;\n", registro_contexto->Rip);
 
-        );
+        // Header[0] y Header[1]
+        printf("\tM128A   Header[0]    = { Low: %llu, High: %lld };\n",
+               registro_contexto->Header[0].Low, registro_contexto->Header[0].High);
+        printf("\tM128A   Header[1]    = { Low: %llu, High: %lld };\n",
+               registro_contexto->Header[1].Low, registro_contexto->Header[1].High);
+
+        // Legacy[0] a Legacy[7]
+        for (int i = 0; i < 8; ++i) {
+            printf("\tM128A   Legacy[%d]    = { Low: %llu, High: %lld };\n",
+                   i,
+                   registro_contexto->Legacy[i].Low,
+                   registro_contexto->Legacy[i].High);
+        }
+
+        // Xmm0 a Xmm15
+        printf("\tM128A   Xmm0         = { Low: %llu, High: %lld };\n", registro_contexto->Xmm0.Low, registro_contexto->Xmm0.High);
+        printf("\tM128A   Xmm1         = { Low: %llu, High: %lld };\n", registro_contexto->Xmm1.Low, registro_contexto->Xmm1.High);
+        printf("\tM128A   Xmm2         = { Low: %llu, High: %lld };\n", registro_contexto->Xmm2.Low, registro_contexto->Xmm2.High);
+        printf("\tM128A   Xmm3         = { Low: %llu, High: %lld };\n", registro_contexto->Xmm3.Low, registro_contexto->Xmm3.High);
+        printf("\tM128A   Xmm4         = { Low: %llu, High: %lld };\n", registro_contexto->Xmm4.Low, registro_contexto->Xmm4.High);
+        printf("\tM128A   Xmm5         = { Low: %llu, High: %lld };\n", registro_contexto->Xmm5.Low, registro_contexto->Xmm5.High);
+        printf("\tM128A   Xmm6         = { Low: %llu, High: %lld };\n", registro_contexto->Xmm6.Low, registro_contexto->Xmm6.High);
+        printf("\tM128A   Xmm7         = { Low: %llu, High: %lld };\n", registro_contexto->Xmm7.Low, registro_contexto->Xmm7.High);
+        printf("\tM128A   Xmm8         = { Low: %llu, High: %lld };\n", registro_contexto->Xmm8.Low, registro_contexto->Xmm8.High);
+        printf("\tM128A   Xmm9         = { Low: %llu, High: %lld };\n", registro_contexto->Xmm9.Low, registro_contexto->Xmm9.High);
+        printf("\tM128A   Xmm10        = { Low: %llu, High: %lld };\n", registro_contexto->Xmm10.Low, registro_contexto->Xmm10.High);
+        printf("\tM128A   Xmm11        = { Low: %llu, High: %lld };\n", registro_contexto->Xmm11.Low, registro_contexto->Xmm11.High);
+        printf("\tM128A   Xmm12        = { Low: %llu, High: %lld };\n", registro_contexto->Xmm12.Low, registro_contexto->Xmm12.High);
+        printf("\tM128A   Xmm13        = { Low: %llu, High: %lld };\n", registro_contexto->Xmm13.Low, registro_contexto->Xmm13.High);
+        printf("\tM128A   Xmm14        = { Low: %llu, High: %lld };\n", registro_contexto->Xmm14.Low, registro_contexto->Xmm14.High);
+        printf("\tM128A   Xmm15        = { Low: %llu, High: %lld };\n", registro_contexto->Xmm15.Low, registro_contexto->Xmm15.High);
+
+
         tab = 26 / 5;
         for (size_t i = 0; i < 26; i++){
             if ((i % tab) == 0) printf("\n\t\t");
@@ -353,22 +331,13 @@ void __attribute__((destructor)) __destructor_debug_c__()
     /*close_file(&Log_debug_file);*/
 }
 
-const char* get_level_debug(const DebugLevel level) {
-    switch(level){
-
-    case DEBUG_LEVEL_INFO:
-        return ErrorLevelStrings[0];
-        break;
-    case DEBUG_LEVEL_WARNING:
-        return ErrorLevelStrings[1];
-        break;
-    case DEBUG_LEVEL_ERROR:
-        return ErrorLevelStrings[2];
-        break;
-    default:
-        return "UNKNOW";
-        break;
-    };
+const char*
+#ifndef _MSC_VER
+__attribute__((pure))
+#endif
+get_level_debug(const DebugLevel level) {
+    if (level <= DEBUG_LEVEL_ERROR) return ErrorLevelStrings[level];
+    return ErrorLevelStrings[DEBUG_LEVEL_UNKNOWN];
 }  
 
 /*void debug_set_log_file(const char *filename)
@@ -382,10 +351,7 @@ const char* get_level_debug(const DebugLevel level) {
     logFile = fopen(filename, "w");
 }*/
 
-void debug_set_level(const DebugLevel level)
-{
-    currentLevel = level;
-}
+
 
 void debug_print(const DebugLevel level, const char *fmt, ...)
 {
@@ -426,11 +392,12 @@ void debug_print(const DebugLevel level, const char *fmt, ...)
     if (level == DEBUG_LEVEL_ERROR)
     {
         va_start(args, fmt);
-        char *message = malloc(size * sizeof(char));
+        char *message = calloc(size, sizeof(char));
         vsnprintf(message, size, fmt, args);
         va_end(args);
 
         ERROR_C(ERROR_LEVEL_ERROR, message);
+        free(message);
     }
 }
 

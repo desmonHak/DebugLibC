@@ -47,7 +47,7 @@
 #include <stdio.h>
 #ifdef _WIN32
 #   include <windows.h>
-static LARGE_INTEGER inicio, fin, frecuencia;
+static LARGE_INTEGER UNUSED inicio, UNUSED fin, UNUSED frecuencia;
 #else
 #   include <time.h>
 static struct timespec UNUSED inicio, UNUSED fin;

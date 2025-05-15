@@ -286,11 +286,10 @@ void signalHandler(int sig, siginfo_t *info, void *context) {
 #endif
 #endif
 
-#ifdef _MSC_VER
-void __constructor_debug_c__()
-#else
-void __attribute__((constructor)) __constructor_debug_c__()
+#ifndef _MSC_VER
+void __attribute__((constructor))
 #endif
+__constructor_debug_c__()
 {
     //debug_set_log_file("debug_log.txt");
     //open_file(&Log_debug_file, NAME_DEFAULT_LOG_DEBUG, READ_WRITE );
@@ -303,10 +302,10 @@ void __attribute__((constructor)) __constructor_debug_c__()
         sa.sa_flags = SA_SIGINFO;
 
         // Capturar señales
-        sigaction(SIGSEGV, &sa, NULL); // Segmentation fault
-        sigaction(SIGFPE, &sa, NULL);  // Floating point exception
-        sigaction(SIGILL, &sa, NULL);  // Illegal instruction
-        sigaction(SIGBUS, &sa, NULL);  // Bus error
+        sigaction(SIGSEGV, &sa, nullptr); // Segmentation fault
+        sigaction(SIGFPE,  &sa, nullptr);  // Floating point exception
+        sigaction(SIGILL,  &sa, nullptr);  // Illegal instruction
+        sigaction(SIGBUS,  &sa, nullptr);  // Bus error
         #endif
     #endif
     DEBUG_PRINT(DEBUG_LEVEL_INFO, "#{FG:white}[#{FG:red}DEBUG INIT#{FG:white}]\n");
@@ -317,10 +316,9 @@ void __attribute__((constructor)) __constructor_debug_c__()
     }*/
 
 }
-#ifdef _MSC_VER
-void __destructor_debug_c__()
-#else
-void __attribute__((destructor)) __destructor_debug_c__()
+void
+#ifndef _MSC_VER
+__destructor_debug_c__()
 #endif
 {
     /*if (logFile != NULL)
@@ -366,7 +364,7 @@ void debug_print(const DebugLevel level, const char *fmt, ...)
 
     va_list args_copy;
     va_copy(args_copy, args);
-    size_t size = (vsnprintf(NULL, 0, fmt, args_copy) + 1) * sizeof(char);
+    size_t size = (vsnprintf(nullptr, 0, fmt, args_copy) + 1) * sizeof(char);
     va_end(args_copy);
     va_copy(args_copy, args);
 

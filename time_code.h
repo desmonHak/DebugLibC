@@ -35,14 +35,15 @@
 
 #include "debug_c.h"
 
-#if defined(__GNUC__) || defined(__clang__)
-#   define UNUSED __attribute__((unused))
-#elif defined(_MSC_VER)
-#   define UNUSED __pragma(warning(suppress:4101))
-#else
-#   define UNUSED
+#ifndef UNUSED
+#   if defined(__GNUC__) || defined(__clang__)
+#      define UNUSED __attribute__((unused))
+#   elif defined(_MSC_VER)
+#      define UNUSED __pragma(warning(suppress:4101))
+#   else
+#      define UNUSED
+#   endif
 #endif
-
 
 #include <stdio.h>
 #ifdef _WIN32

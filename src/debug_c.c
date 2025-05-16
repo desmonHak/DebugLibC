@@ -297,7 +297,7 @@ __constructor_debug_c__()
         #if (defined(_WIN64) ||  defined(_WIN32))
         SetUnhandledExceptionFilter(ExceptionHandler);
         #else
-        struct sigaction sa;
+        struct sigaction sa = {0};
         sa.sa_sigaction = signalHandler;
         sa.sa_flags = SA_SIGINFO;
 

@@ -1,7 +1,12 @@
 include config.mk
 
-all: libcolors.a $(TARGET).a
+generate_lib: libcolors.a $(TARGET).a
 	ar -t $(TARGET).a
+
+all: generate_lib examples
+	@echo
+
+examples:
 	gcc $(CFLAGS) $(INCLUDE_FLAGS) $(PATH_EXAMPLES)/hash.c $(LINKER_FLAGS) -o example.$(EXTENSION)
 
 libcolors.a:

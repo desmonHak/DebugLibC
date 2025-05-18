@@ -33,6 +33,11 @@
  #ifndef __DEBUG_H__
  #define __DEBUG_H__
 
+ #ifndef _WIN32
+ #define _GNU_SOURCE
+ #define _POSIX_C_SOURCE 200809L
+#endif
+
  #include <stdio.h>
  #include <stdarg.h>
  #include "colors.h"
@@ -145,6 +150,7 @@ static inline void debug_set_level(const DebugLevel level)
  #endif
  #else
  #define _GNU_SOURCE
+ #define _POSIX_C_SOURCE 200809L
  #include <stdio.h>
  #include <stdlib.h>
  #include <stdint.h>

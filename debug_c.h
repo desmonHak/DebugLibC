@@ -144,7 +144,6 @@ static inline void debug_set_level(const DebugLevel level)
  LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS *ExceptionInfo);
  #endif
  #else
- #define _GNU_SOURCE
  #include <stdio.h>
  #include <stdlib.h>
  #include <stdint.h>
